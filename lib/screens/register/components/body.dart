@@ -117,7 +117,7 @@ class _BodyState extends State<Body> {
                       TextFormField(
                         obscureText: true,
                         decoration: const InputDecoration(
-                          icon: Icon(Icons.password),
+                          icon: Icon(Icons.key),
                           labelText: 'ລະຫັດຜ່ານ ',
                         ),
                         onSaved: (String? value) {
@@ -144,7 +144,7 @@ class _BodyState extends State<Body> {
                   children: [
                     Text(
                       'ທ່ານມີບັນຊີເເລ້ວເເມ່ນບໍ?',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
                       width: 10,
@@ -157,7 +157,7 @@ class _BodyState extends State<Body> {
                         child: Text(
                           'ເຂົ້າສູ່ລະບົບ',
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.white),
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ))
                   ],
                 ),
