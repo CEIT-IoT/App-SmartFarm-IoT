@@ -152,7 +152,7 @@ class _BodyState extends State<Body> {
                     GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
-                              context, custom_route.Route.register);
+                              context, custom_route.Route.login);
                         },
                         child: Text(
                           'ເຂົ້າສູ່ລະບົບ',
