@@ -1,10 +1,14 @@
+import 'package:app_iot/model/profile.dart';
 import 'package:app_iot/screens/login/components/logo.dart';
+import 'package:app_iot/widgets/dialog_loading';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
+  final formKey = GlobalKey<FormState>();
+  Profile profile = new Profile();
 
-  get formKey => null;
+  Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +17,7 @@ class Body extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: Padding(
+          // ignore: prefer_const_constructors
           padding: EdgeInsets.only(
             right: 20,
             left: 20,
@@ -61,6 +66,15 @@ class Body extends StatelessWidget {
                               icon: Icon(Icons.email),
                               labelText: 'ອີເມວ ',
                             ),
+                            onSaved: (String? email) {
+                              profile.email = email!;
+                            },
+                            validator: MultiValidator([
+                              RequiredValidator(
+                                  errorText: "ກະລຸນາປ້ອນອີເມວຂອງທ່ານ"),
+                              EmailValidator(
+                                  errorText: "ຮູບແບບອີເມວຂອງທ່ານບໍ່ຖືກຕ້ອງ")
+                            ]),
                           ),
                           SizedBox(
                             height: size.height * 0.03,
@@ -70,6 +84,12 @@ class Body extends StatelessWidget {
                               icon: Icon(Icons.code),
                               labelText: 'ລະຫັດຜ່ານ ',
                             ),
+                            onSaved: (String? password) {
+                              profile.password = password!;
+                            },
+                            validator: RequiredValidator(
+                                errorText: "ກະລຸນາປ້ອນລະຫັດຜ່ານ"),
+                            obscureText: true,
                           ),
                           SizedBox(
                             height: 100,
@@ -85,7 +105,13 @@ class Body extends StatelessWidget {
                                 ),
                               ),
                               child: MaterialButton(
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    formKey.currentState!.save();
+                                    DialogLoading(
+                                        context, "ກຳລັງເຂົ້າສູ່ລະບົບ...");
+                                  }
+                                },
                                 child: Text(
                                   'ເຂົ້າສູ່ລະບົບ',
                                   style: TextStyle(
@@ -97,42 +123,6 @@ class Body extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Row(children: <Widget>[
-                    //   buildDivider(),
-                    //   Text("ຫຼື"),
-                    //   buildDivider(),
-                    // ]),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     GestureDetector(
-                    //       onTap: () {
-                    //         Navigator.pushNamed(
-                    //             context, custom_route.Route.selectMenu);
-                    //       },
-                    //       child: Image.asset(
-                    //         icFacebook,
-                    //         width: 30,
-                    //         height: 30,
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 20,
-                    //     ),
-                    //     GestureDetector(
-                    //       onTap: () async {
-                    //         await processSignInWithGoogle();
-                    //         Navigator.pushNamed(
-                    //             context, custom_route.Route.selectMenu);
-                    //       },
-                    //       child: Image.asset(
-                    //         icGoogle,
-                    //         width: 30,
-                    //         height: 30,
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
                     SizedBox(
                       height: size.height * 0.2,
                     ),
