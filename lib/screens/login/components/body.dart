@@ -3,6 +3,7 @@ import 'package:app_iot/screens/login/components/logo.dart';
 import 'package:app_iot/widgets/dialog_loading';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:app_iot/constant/routes.dart' as custom_route;
 
 class Body extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -137,7 +138,10 @@ class Body extends StatelessWidget {
                           width: 10,
                         ),
                         GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, custom_route.Route.register);
+                            },
                             child: Text(
                               'ລົງທະບຽນ',
                               style: TextStyle(

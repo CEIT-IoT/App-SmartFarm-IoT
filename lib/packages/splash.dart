@@ -4,6 +4,8 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:app_iot/constant/images.dart';
 
 class Splash extends StatelessWidget {
+  const Splash({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
