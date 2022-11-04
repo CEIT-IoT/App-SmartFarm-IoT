@@ -10,11 +10,11 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       backgroundColor: Colors.white,
-      duration: 3000,
+      duration: 2000,
       splash: Image.asset(
         logo,
-        width: 200,
-        height: 200,
+        width: 400,
+        height: 400,
       ),
       nextScreen: Login(),
       splashTransition: SplashTransition.fadeTransition,

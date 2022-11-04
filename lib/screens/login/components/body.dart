@@ -1,6 +1,10 @@
 import 'package:app_iot/model/profile.dart';
 import 'package:app_iot/screens/login/components/logo.dart';
-import 'package:app_iot/widgets/dialog_loading';
+import 'package:app_iot/utilities/pref_login.dart';
+import 'package:app_iot/widgets/dialog_error.dart';
+import 'package:app_iot/widgets/dialog_loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:app_iot/constant/routes.dart' as custom_route;
@@ -8,8 +12,7 @@ import 'package:app_iot/constant/routes.dart' as custom_route;
 class Body extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   Profile profile = new Profile();
-
-  Body({Key? key}) : super(key: key);
+  final Future<FirebaseApp> firbase = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class Body extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                       decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
@@ -111,6 +114,48 @@ class Body extends StatelessWidget {
                                     formKey.currentState!.save();
                                     DialogLoading(
                                         context, "ກຳລັງເຂົ້າສູ່ລະບົບ...");
+                                    try {
+                                      await FirebaseAuth.instance
+                                          .signInWithEmailAndPassword(
+                                              email: profile.email.toString(),
+                                              password:
+                                                  profile.password.toString())
+                                          .then((value) async {
+                                        await LoginPreference()
+                                            .setPrefEmailLogin(profile.email!);
+                                        await LoginPreference()
+                                            .setPrefEmailLogin(profile.email!);
+                                        formKey.currentState!.reset();
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacementNamed(
+                                            context, custom_route.Route.home);
+                                      });
+                                    } on FirebaseAuthException catch (e) {
+                                      print('Error login ==> ${e.message}');
+                                      Navigator.pop(context);
+                                      if (e.message!.contains(
+                                          'The password is invalid')) {
+                                        dialogError(
+                                            context,
+                                            'ແຈ້ງເຕືອນ',
+                                            'ຂໍ້ມູນຂອງທ່ານບໍ່ຖືກຕ້ອງ\nລອງໃໝ່ອີກຄັ້ງ',
+                                            'ຕົກລົງ');
+                                      } else if (e.message!.contains(
+                                          'There is no user record corresponding to this identifier')) {
+                                        formKey.currentState!.reset();
+                                        dialogError(
+                                            context,
+                                            'ແຈ້ງເຕືອນ',
+                                            'ບັນຊີຂອງທ່ານບໍ່ມີຢູ່ໃນລະບົບກະລຸນາ\nລົງທະບຽນກ່ອນ',
+                                            'ປິດ');
+                                      } else {
+                                        dialogError(
+                                            context,
+                                            'ຂໍອະໄພ',
+                                            'ລະບົບມີບັນຫາ, ກະລຸນາ\nລອງໃໝ່ອີກຄັ້ງ',
+                                            'ຕົກລົງ');
+                                      }
+                                    }
                                   }
                                 },
                                 child: Text(

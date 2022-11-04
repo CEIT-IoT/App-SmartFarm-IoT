@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   animated_splash_screen: any
   form_field_validator: any
+  firebase_auth: any
+  firebase_core: any
+  shared_preferences: any
 
 
 
