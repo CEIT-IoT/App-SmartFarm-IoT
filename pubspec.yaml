@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: any
   firebase_core: any
   shared_preferences: any
+  lite_rolling_switch: any
+  fl_chart: any
 
 
 
