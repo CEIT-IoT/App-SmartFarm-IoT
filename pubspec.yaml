@@ -41,6 +41,8 @@ dependencies:
   shared_preferences: any
   lite_rolling_switch: any
   fl_chart: any
+  mqtt_client: any
+  get: 4.6.1
 
 
 

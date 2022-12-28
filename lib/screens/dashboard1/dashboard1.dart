@@ -1,171 +1,51 @@
 import 'package:app_iot/model/temperatureData.dart';
 import 'package:app_iot/packages/chart.dart';
+import 'package:app_iot/services/mqtt.dart';
 import 'package:app_iot/widgets/circleprogress.dart';
+import 'package:app_iot/widgets/custom_paint.dart';
+import 'package:app_iot/widgets/swith_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:app_iot/services/mqtt.dart';
 
-class Dashboard1Page extends StatefulWidget {
+class Dashboard1Page extends StatelessWidget {
   const Dashboard1Page({Key? key}) : super(key: key);
 
-  @override
-  State<Dashboard1Page> createState() => _Dashboard1PageState();
-}
-
-class _Dashboard1PageState extends State<Dashboard1Page> {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
           Container(
-              margin: EdgeInsets.symmetric(vertical: 20),
-              child: Text(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              child: const Text(
                 "ໂຮງເຮືອນທີ1",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )),
           Expanded(
             child: ListView(
               children: [
-                CustomPaint(
-                  foregroundPainter: CircleProgress(25, true),
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('ອຸ່ນຫະພູມ'),
-                          Text(
-                            '25',
-                            style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '°C',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                GetBuilder<BatteryController>(
+                  init: BatteryController(),
+                  id: 'battery',
+                  builder: (batteryController) {
+                    return CustomPaintCircleProgress(
+                      value: 28,
+                      title: "ອຸນຫະພູມ",
+                      symbol: " 'ໍC",
+                      ues: true,
+                    );
+                  },
                 ),
-                CustomPaint(
-                  foregroundPainter: CircleProgress(60, false),
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('ຄວາມຊູ່ມອາກາດ'),
-                          Text(
-                            '60',
-                            style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '%',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                const SwithButton(
+                  title: 'ພັດລົມ',
+                  pubTopic: 'esp/fan',
                 ),
-                CustomPaint(
-                  foregroundPainter: CircleProgress(60, false),
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('ຄວາມຊູ່ມຂອງດີນ'),
-                          Text(
-                            '60',
-                            style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '%',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "ປໍ້ານ້ຳ",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        child: LiteRollingSwitch(
-                          value: false,
-                          width: 100,
-                          textOn: 'ເປີດ',
-                          textOff: 'ປິດ',
-                          colorOn: Colors.blue,
-                          colorOff: Colors.blueGrey,
-                          iconOn: Icons.lightbulb_outline,
-                          iconOff: Icons.power_settings_new,
-                          animationDuration: const Duration(milliseconds: 300),
-                          onChanged: (bool state) {
-                            print('turned ${(state) ? 'on' : 'off'}');
-                          },
-                          onDoubleTap: () {},
-                          onSwipe: () {},
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "ອັດຕະໂນມັດ",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        child: LiteRollingSwitch(
-                          value: false,
-                          width: 100,
-                          textOn: 'ເປີດ',
-                          textOff: 'ປິດ',
-                          colorOn: Colors.blue,
-                          colorOff: Colors.blueGrey,
-                          iconOn: Icons.lightbulb_outline,
-                          iconOff: Icons.power_settings_new,
-                          animationDuration: const Duration(milliseconds: 300),
-                          onChanged: (bool state) {
-                            print('turned ${(state) ? 'on' : 'off'}');
-                          },
-                          onDoubleTap: () {},
-                          onSwipe: () {},
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
+                const SwithButton(
+                  title: 'ນ້ຳ',
+                  pubTopic: 'esp/led',
                 ),
                 LineChartWidget(temperaturePoints),
               ],
