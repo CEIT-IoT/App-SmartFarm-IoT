@@ -1,8 +1,9 @@
 import 'package:app_iot/widgets/circleprogress.dart';
 import 'package:flutter/material.dart';
 
-class CustomPaintCircleProgress extends StatelessWidget {
+class CustomPaintCircleProgress extends StatefulWidget {
   final double? value;
+  final String? textvalue;
   final String? title;
   final String? symbol;
   final bool ues;
@@ -11,13 +12,20 @@ class CustomPaintCircleProgress extends StatelessWidget {
       required this.value,
       required this.title,
       required this.symbol,
-      required this.ues})
+      required this.ues,
+      this.textvalue})
       : super(key: key);
 
   @override
+  State<CustomPaintCircleProgress> createState() =>
+      _CustomPaintCircleProgressState();
+}
+
+class _CustomPaintCircleProgressState extends State<CustomPaintCircleProgress> {
+  @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      foregroundPainter: CircleProgress(value!, ues),
+      foregroundPainter: CircleProgress(widget.value!, widget.ues),
       child: SizedBox(
         width: 200,
         height: 200,
@@ -27,7 +35,7 @@ class CustomPaintCircleProgress extends StatelessWidget {
             children: const <Widget>[
               Text('ອຸ່ນຫະພູມ'),
               Text(
-                ' 25',
+                "2",
                 style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
               ),
               Text(

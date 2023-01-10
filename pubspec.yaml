@@ -43,7 +43,8 @@ dependencies:
   fl_chart: any
   mqtt_client: any
   get: 4.6.1
-
+  get_storage: ^2.0.3
+ 
 
 
 

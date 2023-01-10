@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:app_iot/const.dart';
 
-class BatteryController extends GetxController {
+class TemperatureController extends GetxController {
   late MqttServerClient client;
 
   // battery json string
-  RxString battery = "{}".obs;
+  RxString temperature = "".obs;
 
   @override
   void onInit() {
@@ -21,11 +22,13 @@ class BatteryController extends GetxController {
 
   void mqttSubscribe() async {
     client = MqttServerClient.withPort(
-        mqttHost, mqttClientId + "_battery", mqttPort);
+        mqttHost, mqttClientId + "_Temperature", mqttPort);
     client.keepAlivePeriod = 30;
     client.autoReconnect = true;
 
-    await client.connect();
+    await client.connect().onError((error, stackTrace) {
+      log("error -> " + error.toString());
+    });
 
     client.onConnected = () {
       log('MQTT connected');
@@ -40,12 +43,12 @@ class BatteryController extends GetxController {
     };
 
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
-      client.subscribe("battery", MqttQos.exactlyOnce);
+      client.subscribe(topic_tem_mushroom, MqttQos.exactlyOnce);
       client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final recMess2 = c[0].payload as MqttPublishMessage;
         final jsonString =
             MqttPublishPayload.bytesToStringAsString(recMess2.payload.message);
-        log("message payload 2 => " + jsonString);
+        log("message payload temperature => " + jsonString);
 
         // sample message
         // '{ "batteryLevel" : 82, "batteryStatus": "ok" }'
@@ -54,8 +57,8 @@ class BatteryController extends GetxController {
         // mosquitto_pub -h 192.168.43.146 -r  -t "battery" -m '{ "batteryLevel" : 82, "batteryStatus": "ok" }'
 
         // update to controller
-        battery.value = jsonString;
-        update(['battery']);
+        temperature.value = jsonString;
+        update(['temperature']);
       });
     }
   }
